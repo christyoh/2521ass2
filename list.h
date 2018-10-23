@@ -1,10 +1,26 @@
 // Linked list interface ... COMP2521 
 #include <stdbool.h>
 
-typedef struct Node *List;
+struct listRep {
+	char* key;
+	double pagerank;
+	struct _node *first;
+};
 
+struct _node {
+	char*		v;
+	struct _node *next; 
+};
+
+typedef struct listRep* List;
+typedef struct _node* Node;
+
+List newList(char*, Node);
+Node makeNode(char* str);
 List insertLL(List, char*);
+bool inLL(Node, char*);
 List deleteLL(List, char*);
-bool inLL(List, char*);
-void freeLL(List);
-void showLL(List);
+void freeLL(Node);
+void showLL(Node);
+bool isKey(List, char*);
+int  listLength(Node);
