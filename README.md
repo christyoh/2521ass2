@@ -5,7 +5,7 @@ assignment spec: https://www.cse.unsw.edu.au/~cs2521/18s2/assignments/ass02/Ass2
 
 Part 1
 
-  A: Victor (complete; readData.c missing invertedIndex component)
+  A: Victor (complete; readData.c)
   
   B: Erin
   
@@ -13,4 +13,4 @@ Part 1
 
 Part 2: Erin
 
-Part 3: Victor
+Part 3: Victor (complete; scaledFootrule.c set.c set.h)
