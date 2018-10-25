@@ -1,65 +1,114 @@
 // Linked list implementation ... COMP2521 
 // Taken from 2521 wk05 lecture (Ashesh)
+
 #include "list.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-typedef struct Node {
-   char*		v;
-   struct Node *next; 
-} Node;
+#include <stdbool.h>
 
-Node *makeNode(char* str) {
-   Node *new = malloc(sizeof(Node));
-   assert(new != NULL);
-   new->v = str;
-   new->next = NULL;
-   return new;
+List newList(char* key, Node head) {
+	char* str = malloc(sizeof(char)*(strlen(key) + 1));
+	strcpy(str, key);
+	
+	List newL = malloc(sizeof(struct listRep));
+	newL->key = str;
+	newL->pagerank = 0;
+	newL->first = head;
+	return newL;
+}
+
+Node makeNode(char* str) {
+	Node new = malloc(sizeof(struct _node));
+	assert(new != NULL);
+	new->v = str;
+	new->next = NULL;
+	return new;
 }
 
 List insertLL(List L, char* str) {
-   if (inLL(L, str))
-      return L;
+	if (inLL(L->first, str))
+	  return L;
 
-   // add new node at the beginning
-   Node *new = makeNode(str);
-   new->next = L;
-   return new;
+	// add new node at the end
+	Node new = makeNode(str);
+	
+	// case: empty list
+	if (L->first == NULL) L->first = new;
+	else {
+		Node curr;
+		for (curr = L->first; curr->next != NULL; curr = curr->next);
+		curr->next = new;
+	}
+	return L;
 }
 
-List deleteLL(List L, char* str) {
-   if (L == NULL)
-      return L;
-   if (strcmp(L->v, n) == 0)
-      return L->next;
+bool inLL(Node head, char* str) {
+	if (head == NULL)
+	  return false;
+	if (strcmp(head->v, str) == 0)
+	 return true;
 
-   L->next = deleteLL(L->next, n);
-   return L;
-
+	return inLL(head->next, str);
 }
 
-bool inLL(List L, char* str) {
-   if (L == NULL)
-      return false;
-   if (strcmp(L->v, n) == 0)
-     return true;
-
-   return inLL(L->next, str);
+void showLL(Node head) {
+	if (head == NULL) {
+		putchar('\n');
+	}
+	else {
+	  printf("%s (%p)", head->v, head->v);
+	  if (head->next != NULL) printf(" -> ");
+	  showLL(head->next);
+	}
+}
+// frees a specific node in a linked list
+List deleteLL(List L, char* v) {
+	if (L == NULL) return L;
+	Node temp = L->first;
+	if (strcmp(L->first->v, v) == 0) {
+		L->first = L->first->next;
+		free(temp);
+	}
+	else {
+		Node prev = L->first;
+		Node curr = L->first->next;
+		while (curr != NULL) {
+			if (strcmp(curr->v, v) == 0) {
+				temp = curr;
+				prev->next = curr->next;
+				curr = curr->next;
+				free(temp);
+			}
+			else {
+				prev = curr;
+				curr = curr->next;
+			}
+		}
+	}
+	
+	return L;
+}
+// frees a linked list starting from the head
+void freeLL(Node head) {
+	if (head != NULL) {
+	  freeLL(head->next);
+	  free(head->v);
+	  free(head);
+	}
+}
+bool isKey(List L, char* str) {
+	if (L == NULL) return false;
+	if (strcmp(L->key, str) == 0) return true;
+	else return false;
 }
 
-void showLL(List L) {
-   if (L == NULL)
-      putchar('\n');
-   else {
-      printf("%s ", L->v);
-      showLL(L->next);
-   }
-}
-
-void freeLL(List L) {
-   if (L != NULL) {
-      freeLL(L->next);
-      free(L);
-   }
+int listLength(Node head) {
+	int length = 0;
+	if (head != NULL) {
+		Node curr;
+		for (curr = head; curr != NULL; curr = curr->next) length++;
+	}
+	return length;
 }
